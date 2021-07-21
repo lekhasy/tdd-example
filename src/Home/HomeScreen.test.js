@@ -1,4 +1,5 @@
 import { findByDisplayValue, findByText, render, screen, waitFor, waitForElementToBeRemoved } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import * as BalanceService from "../Services/BalanceService";
 import * as UserService from "../Services/UserService";
 import { formatCurrency } from "../Utils/CurrencyFormat";
@@ -113,5 +114,50 @@ describe("Home", () => {
             spy.mockRestore();
             spy1.mockRestore();
         });
+
+        it("should show curency selector with default value selected", async () => {
+            const { spy } = mockGetBalanceImplement(async () => {
+                return 123456;
+            });
+
+            const { spy: spy1 } = mockGetAvailableCurrencyCode(() => {
+                return UserService.mock.getAvailableCurrencyCode.success
+            });
+
+            render(<HomeScreen />);
+
+            await waitForElementToBeRemoved(() => screen.getByTestId("loading-icon"));
+
+            const dropdown = screen.getByText(UserService.mock.getAvailableCurrencyCode.success[0].displayName);
+
+            spy.mockRestore();
+            spy1.mockRestore();
+        });
+
+        it("should update display balance amount when user select another currency", () => {
+            const { spy } = mockGetBalanceImplement(async () => {
+                return 123456;
+            });
+
+            const { spy: spy1 } = mockGetAvailableCurrencyCode(() => {
+                return UserService.mock.getAvailableCurrencyCode.success
+            });
+
+            render(<HomeScreen />);
+
+            const dropdown = screen.getByText(UserService.mock.getAvailableCurrencyCode.success[0].displayName);
+
+            userEvent.click(dropdown);
+
+            const vietNamDongOption = screen.getByText(UserService.mock.getAvailableCurrencyCode.success[1].displayName);
+
+            userEvent.click(vietNamDongOption);
+
+            await screen.findByText(formatCurrency(123456, UserService.mock.getAvailableCurrencyCode.success[1].sign));
+
+            spy.mockRestore();
+            spy1.mockRestore();
+        })
+
     });
 });
