@@ -1,10 +1,10 @@
-import logo from './logo.svg';
 import './App.css';
-import { Home } from './Home/HomeScreen';
+import { HomeScreen } from './Home/HomeScreen';
+import 'antd/dist/antd.css';
 
 function App() {
   return (
-    <Home/>
+    <HomeScreen />
   );
 }
 
