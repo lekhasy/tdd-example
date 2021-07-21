@@ -4,7 +4,15 @@ import { getBalance } from '../Services/BalanceService';
 
 export function HomeScreen() {
 
-    const { } = usePromiseResult(getBalance);
+    const { success, error } = usePromiseResult(getBalance);
 
-    return <div><span data-testid="loading-icon">Loading...</span></div>;
+    const renderStatus = () => {
+        return error ? <span>Error</span> : <span data-testid="loading-icon">Loading...</span>;
+    }
+
+    const renderData = () => {
+        return <span></span>
+    }
+
+    return <div>{success ? renderData() : renderStatus()}</div>;
 }

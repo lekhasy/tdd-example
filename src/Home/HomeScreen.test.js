@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import * as BalanceService from "../Services/BalanceService";
 import { HomeScreen } from "./HomeScreen";
 
@@ -23,6 +23,20 @@ describe("Home", () => {
         render(<HomeScreen/>);
 
         expect(getBalanceFn).toBeCalled();
+
+        spy.mockRestore();
+    });
+
+    it("Should show error screen if getBalance fail", async () => {
+        const spy = jest.spyOn(BalanceService, 'getBalance');
+
+        BalanceService.getBalance.mockImplementation(async () => {
+            throw new Error();
+        });
+
+        render(<HomeScreen/>);
+
+        await screen.findByText("Error");
 
         spy.mockRestore();
     });
