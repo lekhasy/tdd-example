@@ -134,7 +134,7 @@ describe("Home", () => {
             spy1.mockRestore();
         });
 
-        it("should update display balance amount when user select another currency", () => {
+        it("should update display balance amount when user select another currency", async () => {
             const { spy } = mockGetBalanceImplement(async () => {
                 return 123456;
             });
@@ -145,7 +145,7 @@ describe("Home", () => {
 
             render(<HomeScreen />);
 
-            const dropdown = screen.getByText(UserService.mock.getAvailableCurrencyCode.success[0].displayName);
+            const dropdown = await screen.findByText(UserService.mock.getAvailableCurrencyCode.success[0].displayName);
 
             userEvent.click(dropdown);
 
@@ -157,7 +157,7 @@ describe("Home", () => {
 
             spy.mockRestore();
             spy1.mockRestore();
-        })
+        });
 
     });
 });
